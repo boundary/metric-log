@@ -31,7 +31,7 @@ class SendLog(object):
         Initialize our example class to show how to log measurements
         """
         self.api = API()
-        self.log = LogMe(db_path='send_log.db')
+        self.logme = LogMe(db_path='send_log.db')
         logging.basicConfig(level=logging.INFO)
 
     def send_measurements(self):
@@ -43,7 +43,7 @@ class SendLog(object):
             timestamp = int(datetime.now().strftime("%s"))
             m = Measurement(metric='CPU', value=randrange(0, 100)/100.0, source='foo', timestamp=timestamp)
             self.api.measurement_create(metric=m.metric, source=m.source, value=m.value, timestamp=m.timestamp)
-            self.log.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
+            self.logme.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
             measurements = []
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
@@ -53,7 +53,7 @@ class SendLog(object):
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
                                             source='blue', timestamp=timestamp))
             self.api.measurement_create_batch(measurements)
-            self.log.log_batch(measurements)
+            self.logme.log_batch(measurements)
             sleep(5)
 
 
