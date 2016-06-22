@@ -20,7 +20,6 @@ import os
 import sqlite3
 
 log = logging.getLogger(__name__)
-log.addHandler(logging.NullHandler())
 
 
 class LogMe(object):
