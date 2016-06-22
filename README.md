@@ -115,7 +115,7 @@ CPU|0.53|blue|1466617532
 command line tool:
 
     ```bash
-    cat measurement.csv
+    $ cat measurement.csv
     metric,value,source,timestamp
     CPU,0.12,foo,1466615494
     CPU,0.09,red,1466615494
