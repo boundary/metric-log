@@ -19,17 +19,18 @@ import logging
 import os
 import sqlite3
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class LogMe(object):
-    def __init__(self, path=None):
+    def __init__(self, db_path='measurement.db'):
         """
         Initialize logging object and setup schema
 
-        :param path:
+        :param db_path:
         """
         self._db_path = None
+        self._conn = None
         self._db_schema = """
         CREATE TABLE measurement (
             metric text,
@@ -38,12 +39,8 @@ class LogMe(object):
             timestamp date
          );
         """
-        self._conn = None
 
-        if path is not None:
-            self._db_path = path
-        else:
-            self._db_path = 'measurement.db'
+        self._db_path = db_path
 
         db_is_new = not os.path.exists(self._db_path)
 
@@ -79,7 +76,7 @@ class LogMe(object):
 
     def _execute_sql(self, sql):
         self.open_database()
-        log.debug("sql: {0}".format(sql))
+        logger.debug("sql: {0}".format(sql))
         self._conn.executescript(sql)
 
     def log(self, metric, value, source, timestamp=None):
@@ -105,14 +102,13 @@ class LogMe(object):
         :param measurements: A list of measurements
         :return:
         """
-
         for m in measurements:
-            log.info(m)
+            logger.info(m)
             self.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
 
 if __name__ == '__main__':
     ts = datetime.now()
-    log = LogMe(path='test.db')
+    log = LogMe(db_path='test.db')
     log.log('CPU', 0.8, 'foo', ts)
     log.log('CPU', 0.5, 'bar')
