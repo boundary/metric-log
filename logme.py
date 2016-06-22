@@ -89,7 +89,7 @@ class LogMe(object):
 
         for m in measurements:
             print(m)
-            self.log(metric=m.metrc, value=m.value, source=m.source, timestamp=m.timestamp)
+            self.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
 
 if __name__ == '__main__':
