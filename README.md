@@ -44,7 +44,7 @@ sent using the TrueSight Pulse measurement API.
 
 ## Example
 
-A completed example is shown [here](blob/master/send_log.py)
+A completed example is shown [here](send_log.py)
 
 
 
