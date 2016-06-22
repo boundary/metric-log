@@ -40,12 +40,12 @@ class SendLog(object):
         :return:
         """
         while True:
-            m = Measurement(metric='CPU', value=randrange(0, 100)/100.0, source='foo', timestamp=datetime.now())
+            timestamp = int(datetime.now().strftime("%s"))
+            m = Measurement(metric='CPU', value=randrange(0, 100)/100.0, source='foo', timestamp=timestamp)
             self.api.measurement_create(metric=m.metric, source=m.source, value=m.value, timestamp=m.timestamp)
             self.log.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
             measurements = []
-            timestamp = int(datetime.now().strftime("%s"))
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
                                             source='red', timestamp=timestamp))
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
