@@ -21,6 +21,7 @@ from tspapi import Measurement
 from random import randrange
 from logme import LogMe
 from time import sleep
+import logging
 
 
 class SendLog(object):
@@ -31,6 +32,7 @@ class SendLog(object):
         """
         self.api = API()
         self.log = LogMe()
+        logging.basicConfig(level=logging.INFO)
 
     def send_measurements(self):
         """
@@ -39,17 +41,18 @@ class SendLog(object):
         """
         while True:
             m = Measurement(metric='CPU', value=randrange(0, 100)/100.0, source='foo', timestamp=datetime.now())
-            # self.api.measurement_create(metric=m.metric, source=m.source, value=m.value, timestamp=m.timestamp)
+            self.api.measurement_create(metric=m.metric, source=m.source, value=m.value, timestamp=m.timestamp)
             self.log.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
             measurements = []
+            timestamp = int(datetime.now().strftime("%s"))
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
-                                            source='red', timestamp=datetime.now()))
+                                            source='red', timestamp=timestamp))
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
-                                            source='green', timestamp=datetime.now()))
+                                            source='green', timestamp=timestamp))
             measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
-                                            source='blue', timestamp=datetime.now()))
-            # self.api.measurement_create_batch(measurements)
+                                            source='blue', timestamp=timestamp))
+            self.api.measurement_create_batch(measurements)
             self.log.log_batch(measurements)
             sleep(5)
 
