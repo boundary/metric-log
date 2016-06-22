@@ -1,3 +1,19 @@
+#!/usr/bin/env python
+#
+# Copyright 2016 BMC Software, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 from datetime import datetime
 import logging
 import os
@@ -15,7 +31,14 @@ class LogMe(object):
         :param path:
         """
         self._db_path = None
-        self._db_schema_path = 'schema.sql'
+        self._db_schema = """
+        CREATE TABLE measurement (
+            metric text,
+            value number,
+            source text,
+            timestamp date
+         );
+        """
         self._conn = None
 
         if path is not None:
@@ -23,7 +46,6 @@ class LogMe(object):
         else:
             self._db_path = 'measurement.db'
 
-        self._db_schema_path = 'schema.sql'
         db_is_new = not os.path.exists(self._db_path)
 
         self.open_database()
@@ -37,9 +59,7 @@ class LogMe(object):
         Create the measurement schema in the database
         :return:
         """
-        with open(self._db_schema_path, 'rt') as f:
-            schema = f.read()
-            self._conn.executescript(schema)
+        self._conn.executescript(self._db_schema)
 
     def open_database(self):
         """
@@ -88,7 +108,7 @@ class LogMe(object):
         """
 
         for m in measurements:
-            print(m)
+            log.info(m)
             self.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
 
