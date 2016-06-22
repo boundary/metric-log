@@ -25,7 +25,6 @@ import logging
 
 
 class SendLog(object):
-
     def __init__(self):
         """
         Initialize our example class to show how to log measurements
@@ -41,16 +40,16 @@ class SendLog(object):
         """
         while True:
             timestamp = int(datetime.now().strftime("%s"))
-            m = Measurement(metric='CPU', value=randrange(0, 100)/100.0, source='foo', timestamp=timestamp)
+            m = Measurement(metric='CPU', value=randrange(0, 100) / 100.0, source='foo', timestamp=timestamp)
             self.api.measurement_create(metric=m.metric, source=m.source, value=m.value, timestamp=m.timestamp)
             self.logme.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
 
             measurements = []
-            measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
+            measurements.append(Measurement(metric='CPU', value=randrange(0, 100) / 100.0,
                                             source='red', timestamp=timestamp))
-            measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
+            measurements.append(Measurement(metric='CPU', value=randrange(0, 100) / 100.0,
                                             source='green', timestamp=timestamp))
-            measurements.append(Measurement(metric='CPU', value=randrange(0,100)/100.0,
+            measurements.append(Measurement(metric='CPU', value=randrange(0, 100) / 100.0,
                                             source='blue', timestamp=timestamp))
             self.api.measurement_create_batch(measurements)
             self.logme.log_batch(measurements)
@@ -66,8 +65,6 @@ def execute():
     s = SendLog()
     s.send_measurements()
 
+
 if __name__ == '__main__':
     execute()
-
-
-
