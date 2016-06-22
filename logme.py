@@ -1,10 +1,13 @@
+from datetime import datetime
+import logging
 import os
 import sqlite3
-from datetime import datetime
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 
 class LogMe(object):
-
     def __init__(self, path=None):
         """
         Initialize logging object and setup schema
@@ -55,7 +58,12 @@ class LogMe(object):
             self._conn.close()
             self._conn = None
 
-    def log(self, metric, value, source, timestamp):
+    def _execute_sql(self, sql):
+        self.open_database()
+        log.debug("sql: {0}".format(sql))
+        self._conn.executescript(sql)
+
+    def log(self, metric, value, source, timestamp=None):
         """
         Log a row to the database
         :param metric:
@@ -64,13 +72,28 @@ class LogMe(object):
         :param timestamp:
         :return:
         """
-        self.open_database()
+        if timestamp is None:
+            timestamp = datetime.now()
+
         sql = "insert into measurement(metric, value, source, timestamp) values('{0}', {1}, '{2}', '{3}');".format(
             metric, value, source, timestamp)
-        self._conn.executescript(sql)
+
+        self._execute_sql(sql)
+
+    def log_batch(self, measurements):
+        """
+        Logs a list of measurements to the database
+        :param measurements: A list of measurements
+        :return:
+        """
+
+        for m in measurements:
+            print(m)
+            self.log(metric=m.metrc, value=m.value, source=m.source, timestamp=m.timestamp)
 
 
 if __name__ == '__main__':
     ts = datetime.now()
     log = LogMe(path='test.db')
     log.log('CPU', 0.8, 'foo', ts)
+    log.log('CPU', 0.5, 'bar')
