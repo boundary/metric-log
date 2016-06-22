@@ -31,7 +31,7 @@ class SendLog(object):
         Initialize our example class to show how to log measurements
         """
         self.api = API()
-        self.log = LogMe()
+        self.log = LogMe(db_path='send_log.db')
         logging.basicConfig(level=logging.INFO)
 
     def send_measurements(self):
@@ -58,6 +58,11 @@ class SendLog(object):
 
 
 def execute():
+    """
+    Create an instance of SendLog and call its method to generate measurements using the Pulse API and
+    use the LogMe instance to log measurements sent to Pulse
+    :return:
+    """
     s = SendLog()
     s.send_measurements()
 
