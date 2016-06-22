@@ -7,13 +7,25 @@ from random import randrange
 from logme import LogMe
 from time import sleep
 
-api = API()
-log = LogMe()
 
-while True:
-    m = Measurement(metric='CPU', value=randrange(0,100)/100.0, source='foo', timestamp=datetime.now())
-    api.measurement_create_batch([m])
-#    log.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
-    sleep(5)
+class SendLog(object):
+
+    def __init__(self):
+        self.api = API()
+        self.log = LogMe()
+
+    def send_measurements(self):
+        while True:
+            m = Measurement(metric='CPU', value=randrange(0,100)/100.0,
+                            source='foo', timestamp=datetime.now())
+            self.api.measurement_create_batch([m])
+            self.log.log(metric=m.metric, value=m.value, source=m.source, timestamp=m.timestamp)
+            sleep(5)
+
+
+def execute():
+    s = SendLog()
+    s.send_measurements()
+
 
 
